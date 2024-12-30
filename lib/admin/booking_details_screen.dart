@@ -89,7 +89,7 @@ class BookingDetailsScreen extends StatelessWidget {
         title: const Text("Booking Details"),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(10),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

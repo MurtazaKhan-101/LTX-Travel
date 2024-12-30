@@ -31,7 +31,6 @@ class _UserInfoFormState extends State<UserInfoForm> {
         title: const Text(
           "User Information",
         ),
-        backgroundColor: Colors.blue,
         centerTitle: true,
         elevation: 2.0,
       ),

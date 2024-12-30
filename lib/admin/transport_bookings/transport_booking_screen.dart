@@ -71,56 +71,58 @@ class TransportCategoryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<QuerySnapshot>(
-      stream: TransportBookingService.getTransportBookings(category),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+    return Padding(
+        padding: const EdgeInsets.all(10),
+        child: StreamBuilder<QuerySnapshot>(
+          stream: TransportBookingService.getTransportBookings(category),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-        if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-          return const Center(child: Text('No Transport Found.'));
-        }
+            if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+              return const Center(child: Text('No Transport Found.'));
+            }
 
-        final bookings = snapshot.data!.docs;
+            final bookings = snapshot.data!.docs;
 
-        return ListView.builder(
-          itemCount: bookings.length,
-          itemBuilder: (context, index) {
-            final data = bookings[index].data() as Map<String, dynamic>;
+            return ListView.builder(
+              itemCount: bookings.length,
+              itemBuilder: (context, index) {
+                final data = bookings[index].data() as Map<String, dynamic>;
 
-            return Card(
-              margin: const EdgeInsets.all(8.0),
-              elevation: 4,
-              child: ListTile(
-                title: Text(data['name']),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Location: ${data['location']}'),
-                    Text('Price: \$${data['price']}'),
-                    Text('Capacity: ${data['capacity']}'),
-                  ],
-                ),
-                trailing: IconButton(
-                  icon: const Icon(Icons.edit),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditTransportScreen(
-                          transportId: bookings[index].id,
-                          data: data,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
+                return Card(
+                  margin: const EdgeInsets.all(8.0),
+                  elevation: 4,
+                  child: ListTile(
+                    title: Text(data['name']),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Location: ${data['location']}'),
+                        Text('Price: \$${data['price']}'),
+                        Text('Capacity: ${data['capacity']}'),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditTransportScreen(
+                              transportId: bookings[index].id,
+                              data: data,
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                );
+              },
             );
           },
-        );
-      },
-    );
+        ));
   }
 }

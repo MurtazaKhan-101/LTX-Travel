@@ -125,7 +125,7 @@ class UserDashboard extends StatelessWidget {
                 ),
                 subtitle: Text(
                   "Price: \$${packageData['price'] ?? 'N/A'}\n"
-                  "Duration: ${packageData['duration'] ?? 'N/A'} days",
+                  "Duration: ${packageData['duration'] ?? 'N/A'}",
                   style: const TextStyle(fontSize: 14),
                 ),
                 trailing: ElevatedButton(

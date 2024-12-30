@@ -36,53 +36,98 @@ class _EditPackageScreenState extends State<EditPackageScreen> {
   }
 
   void _deletePackage() async {
-    bool confirmDelete = await showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text("Delete Package"),
-            content: const Text(
-                "Are you sure you want to delete this package? This action cannot be undone."),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(false),
-                child: const Text("Cancel"),
-              ),
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: const Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.red),
+    try {
+      bool confirmDelete = await showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text("Delete Package"),
+              content: const Text(
+                  "Are you sure you want to delete this package? This action cannot be undone."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  child: const Text("Cancel"),
                 ),
-              ),
-            ],
-          ),
-        ) ??
-        false;
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  child: const Text(
+                    "Delete",
+                    style: TextStyle(color: Colors.red),
+                  ),
+                ),
+              ],
+            ),
+          ) ??
+          false;
 
-    if (confirmDelete) {
-      await VisaPackageService.deletePackage(widget.packageId);
+      if (confirmDelete) {
+        await VisaPackageService.deletePackage(widget.packageId);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Package deleted successfully!")),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Package deleted successfully!")),
+        SnackBar(content: Text("Failed to delete package: $e")),
       );
-      Navigator.pop(context);
     }
   }
 
   void _updatePackage() async {
-    await VisaPackageService.updatePackage(
-      widget.packageId,
-      {
-        'name': nameController.text,
-        'category': category,
-        'price': double.parse(priceController.text),
-        'description': descriptionController.text,
-        'duration': durationController.text,
-      },
-    );
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Package updated successfully!")),
-    );
-    Navigator.pop(context);
+    if (!_validateInputs()) {
+      return;
+    }
+
+    try {
+      await VisaPackageService.updatePackage(
+        widget.packageId,
+        {
+          'name': nameController.text,
+          'category': category,
+          'price': double.parse(priceController.text),
+          'description': descriptionController.text,
+          'duration': durationController.text,
+        },
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Package updated successfully!")),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to update package: $e")),
+      );
+    }
+  }
+
+  bool _validateInputs() {
+    if (nameController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid name.")),
+      );
+      return false;
+    }
+    if (priceController.text.isEmpty ||
+        double.tryParse(priceController.text) == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid price.")),
+      );
+      return false;
+    }
+    if (descriptionController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a description.")),
+      );
+      return false;
+    }
+    if (durationController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Please enter a valid duration.")),
+      );
+      return false;
+    }
+    return true;
   }
 
   @override
@@ -90,15 +135,6 @@ class _EditPackageScreenState extends State<EditPackageScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Visa Package"),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Colors.blue, Colors.lightBlueAccent],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -214,7 +250,8 @@ class _EditPackageScreenState extends State<EditPackageScreen> {
                           ),
                           backgroundColor: Colors.blue,
                         ),
-                        child: const Text("Update Package"),
+                        child: const Text("Update Package",
+                            style: TextStyle(color: Colors.white)),
                       ),
                     ),
                     const SizedBox(height: 10),
@@ -234,7 +271,10 @@ class _EditPackageScreenState extends State<EditPackageScreen> {
                           backgroundColor:
                               const Color.fromARGB(255, 245, 103, 93),
                         ),
-                        child: const Text("Delete Package"),
+                        child: const Text(
+                          "Delete Package",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ),
                   ],

@@ -206,41 +206,39 @@ class _EditTransportScreenState extends State<EditTransportScreen> {
               ),
             ),
             const SizedBox(height: 32),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _updateTransportBooking,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _updateTransportBooking,
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: const Text(
-                      "Update Transport",
-                      style: TextStyle(fontSize: 16),
-                    ),
+                    backgroundColor: Colors.blue),
+                child: const Text(
+                  "Update Hotel",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _deleteTransportBooking,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color.fromARGB(255, 245, 103, 93),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _deleteTransportBooking,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 245, 103, 93),
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                    child: const Text(
-                      "Delete Transport",
-                      style: TextStyle(fontSize: 16),
-                    ),
-                  ),
+                child: const Text(
+                  "Delete Hotel",
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
-              ],
+              ),
             ),
           ],
         ),

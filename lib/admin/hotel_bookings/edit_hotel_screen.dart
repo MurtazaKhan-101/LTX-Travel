@@ -168,14 +168,14 @@ class _EditHotelScreenState extends State<EditHotelScreen> {
               child: ElevatedButton(
                 onPressed: updateHotel,
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16.0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                ),
+                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    backgroundColor: Colors.blue),
                 child: const Text(
                   "Update Hotel",
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ),
@@ -193,7 +193,7 @@ class _EditHotelScreenState extends State<EditHotelScreen> {
                 ),
                 child: const Text(
                   "Delete Hotel",
-                  style: TextStyle(fontSize: 16, color: Colors.black),
+                  style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
             ),

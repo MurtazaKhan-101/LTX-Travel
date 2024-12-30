@@ -20,8 +20,34 @@ class _LoginScreenState extends State<LoginScreen> {
   bool isLoading = false;
   bool showPassword = false;
 
+  String? emailError;
+  String? passwordError;
+  String? generalError;
+
   void loginUser() async {
-    setState(() => isLoading = true);
+    setState(() {
+      isLoading = true;
+      emailError = null;
+      passwordError = null;
+      generalError = null;
+    });
+
+    if (emailController.text.trim().isEmpty) {
+      setState(() {
+        emailError = "Email cannot be empty.";
+        isLoading = false;
+      });
+      return;
+    }
+
+    if (passwordController.text.trim().isEmpty) {
+      setState(() {
+        passwordError = "Password cannot be empty.";
+        isLoading = false;
+      });
+      return;
+    }
+
     try {
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(
         email: emailController.text.trim(),
@@ -40,10 +66,26 @@ class _LoginScreenState extends State<LoginScreen> {
           MaterialPageRoute(builder: (context) => const UserDashboard()),
         );
       }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        switch (e.code) {
+          case 'user-not-found':
+            emailError = "No user found with this email.";
+            break;
+          case 'wrong-password':
+            passwordError = "Incorrect password.";
+            break;
+          case 'invalid-email':
+            emailError = "Invalid email address.";
+            break;
+          default:
+            generalError = "Login failed. Please try again.";
+        }
+      });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Login Failed: ${e.toString()}")),
-      );
+      setState(() {
+        generalError = "An unexpected error occurred: ${e.toString()}";
+      });
     } finally {
       setState(() => isLoading = false);
     }
@@ -103,9 +145,9 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("Google Sign-In Failed: ${e.toString()}")),
-      );
+      setState(() {
+        generalError = "Google Sign-In failed. Please try again.";
+      });
     } finally {
       setState(() => isLoading = false);
     }
@@ -152,10 +194,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   prefixIcon: const Icon(Icons.email),
+                  errorText: emailError,
                 ),
                 keyboardType: TextInputType.emailAddress,
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 10),
               TextField(
                 controller: passwordController,
                 obscureText: !showPassword,
@@ -175,19 +218,29 @@ class _LoginScreenState extends State<LoginScreen> {
                       });
                     },
                   ),
+                  errorText: passwordError,
                 ),
               ),
+              if (generalError != null)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: Text(
+                    generalError!,
+                    style: const TextStyle(color: Colors.red, fontSize: 14),
+                  ),
+                ),
               const SizedBox(height: 20),
               isLoading
                   ? const CircularProgressIndicator()
                   : ElevatedButton(
                       onPressed: loginUser,
                       style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 50),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          backgroundColor: Colors.blue),
+                        minimumSize: const Size(double.infinity, 50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: Colors.blue,
+                      ),
                       child: const Text(
                         "Login",
                         style: TextStyle(color: Colors.white),

@@ -32,7 +32,7 @@ class VisaPackagesScreen extends StatelessWidget {
         ),
         floatingActionButton: Builder(
           builder: (context) {
-            return FloatingActionButton.extended(
+            return FloatingActionButton(
               onPressed: () {
                 final tabIndex = DefaultTabController.of(context).index;
                 final selectedCategory = categories[tabIndex];
@@ -45,15 +45,13 @@ class VisaPackagesScreen extends StatelessWidget {
                 );
               },
               backgroundColor: Colors.blue,
-              icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text(
-                "Add Package",
-                style: TextStyle(color: Colors.white),
+              child: const Icon(
+                Icons.add,
+                color: Colors.white,
               ),
             );
           },
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       ),
     );
   }
